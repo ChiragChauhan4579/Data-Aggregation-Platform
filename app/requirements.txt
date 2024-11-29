@@ -1,0 +1,9 @@
+# psycopg2==2.9.9
+psycopg2_binary==2.9.9
+pydantic==2.9.2
+Requests==2.32.3
+streamlit==1.29.0
+plotly
+pandas
+numpy
+seaborn

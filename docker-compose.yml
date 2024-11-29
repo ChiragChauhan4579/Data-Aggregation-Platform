@@ -1,0 +1,55 @@
+version: '3.9'
+
+services:
+  fastapi:
+    build:
+      context: ./main
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./main:/main
+    container_name: fastapi
+
+  streamlit:
+    build:
+      context: ./app
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./app:/app
+    container_name: streamlit_app
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+
+volumes:
+  grafana-data:
+
+# commands:
+  # docker-compose up --build
+  # docker-compose up -d
+  # docker compose down
+  # docker system prune
+  # docker-compose pause
+  # docker-compose unpause
+
+# added installations:
+  # punkt nltk
+
+# conda deactivate
+# conda activate data_aggregation
