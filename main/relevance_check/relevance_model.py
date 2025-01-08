@@ -7,10 +7,6 @@ from chromadb.utils.embedding_functions import OllamaEmbeddingFunction
 import requests
 import json
 
-# TO BE ADDED
-# ---------------------- relevance module experiment with article / chunk / title relevance  ----------------------
-# ---------------------- summarization & threshold finalization ----------------------
-
 class RelevanceModel:
     def __init__(self):
         # retrive the necessary modules
@@ -50,15 +46,6 @@ class RelevanceModel:
                        embeddings=[chunk_embedding],
                        metadatas=[{'url':url,'title': title, 'chunk_index': index}],
                        ids=[f"{title}_{index}"])
-
-    # def fetch_embedding(self, query, chunk_id):
-    #     collection = self.get_collection_for_query(query)
-    #     result = collection.get(ids=[chunk_id])
-    #     if result:
-    #         return result['embeddings'][0], result['metadatas'][0]
-    #     return None, None
-    # -------------------- change fetch method and response --------------------
-
 
     def chunk_text(self, text, chunk_size=4096):
         # chunks the text with nltk sentence tokenizer and returns the list of chunks

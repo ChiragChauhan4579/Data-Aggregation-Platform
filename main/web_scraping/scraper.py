@@ -43,23 +43,32 @@ class WebScraper:
             if key.lower() in response['response'].lower():
                 return key
         else:
-            return "Political"
+            return "General"
 
     def google_search_full_advanced_scrape(self, query, max_results=5):
         # makes google search and scrapes 5 articles per site and returns the list of articles
 
         category = self.get_category(query)
 
-        category_websites = categories[category]
-        print(f"Selected Category: {category}, Websites: {category_websites}")
-
-        url_list = []
-        for site in category_websites:
-            links = search(query + f" site:{site}",num_results=max_results,advanced=True)
+        if category == "General":
+            url_list = []
+            links = search(query,num_results=max_results,advanced=True)
             for i in links:
                 url_list.append(i.url)
 
-        print(url_list)
+            print(url_list)
+        else:
+            category_websites = categories[category]
+            print(f"Selected Category: {category}, Websites: {category_websites}")
+
+            url_list = []
+            for site in category_websites:
+                links = search(query + f" site:{site}",num_results=max_results,advanced=True)
+                for i in links:
+                    url_list.append(i.url)
+
+            print(url_list)
+
         return url_list,category
 
 

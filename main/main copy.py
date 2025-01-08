@@ -26,7 +26,7 @@ ef = OllamaEmbeddingFunction(
         model_name="bge-m3",
         url="http://host.docker.internal:11434/api/embeddings")
 
- # start the app
+# start the app
 app = FastAPI()
 
 Instrumentator().instrument(app).expose(app)

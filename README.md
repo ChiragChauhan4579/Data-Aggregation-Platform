@@ -59,6 +59,10 @@ It is a streamlit applitcation which shows certain graphs about queries, chunks 
 
 Run the command in the terminal: `python main.py` and access the swagger at **http://127.0.0.1:8000/docs** 
 
+## Docker and Docker compose
+
 ## Grafana and Prometheus
 
-## Opik and Opik configure
+## Opik and Opik configure (run in the terminal)
+
+## Guardrails and Guardrails configure

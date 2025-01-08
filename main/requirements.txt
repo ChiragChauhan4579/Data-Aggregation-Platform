@@ -24,3 +24,4 @@ prometheus-client
 prometheus-fastapi-instrumentator
 opik
 Werkzeug
+guardrails-ai>=0.5.13

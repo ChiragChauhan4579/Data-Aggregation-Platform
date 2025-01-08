@@ -4,14 +4,17 @@ from query_process.query_processing import ProcessSystem
 import uvicorn
 import os
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
-import opik
-opik.configure(use_local=False)
+# import opik
+# opik.configure(use_local=False)
 os.environ["OPIK_PROJECT_NAME"] = "Data_Aggregation_Platform"
 from langchain.llms import Ollama
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from langchain.memory import ConversationBufferMemory
 from langchain.docstore.document import Document
+# from guardrails import Guard
+# from guardrails.hub import GibberishText, ToxicLanguage
+# from guardrails import Guard
 import ollama
 import chromadb
 import requests
@@ -26,7 +29,15 @@ ef = OllamaEmbeddingFunction(
         model_name="bge-m3",
         url="http://host.docker.internal:11434/api/embeddings")
 
- # start the app
+# gibberish_text_guard = Guard().use(
+#     GibberishText, threshold=0.5, validation_method="sentence", on_fail="exception"
+# )
+
+# toxic_lang_guard = Guard().use(
+#     ToxicLanguage, threshold=0.5, validation_method="sentence", on_fail="exception"
+# )
+
+# start the app
 app = FastAPI()
 
 Instrumentator().instrument(app).expose(app)
@@ -135,7 +146,32 @@ def generate(request: ChatRequest):
     try:
         retriver_response = retriever_func(request.chat_query,collection_name=request.collection_name)
         chat_response = generate_response_with_ollama(retriever_response=retriver_response,chat_query=request.chat_query)
+
+        validation_errors = []
+        
+        try:
+            gibberish_text_guard.validate(chat_response)
+        except Exception as e:
+            validation_errors.append("gibberish")
+        
+        try:
+            toxic_lang_guard.validate(chat_response)
+        except Exception as e:
+            validation_errors.append("toxic")
+        
+        # Handle validation errors
+        if "gibberish" in validation_errors and "toxic" in validation_errors:
+            return "The response generated failed to meet our content guidelines due to inadequate context and inappropriate language. Could you rephrase or clarify your query for a better response?"
+
+        elif "gibberish" in validation_errors:
+            return "Due to insufficient context, the generated response may not be accurate. Could you clarify or rephrase your query?"
+  
+        elif "toxic" in validation_errors:
+            return "Apologies, but the generated response contains language that violates our guidelines. Please try rephrasing your query for a more appropriate response."
+        
+        # If no validation errors, return the response
         return chat_response
+
     except Exception as e:
         raise e
 

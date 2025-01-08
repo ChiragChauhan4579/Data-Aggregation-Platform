@@ -43,7 +43,7 @@ volumes:
 # commands:
   # docker-compose up --build
   # docker-compose up -d
-  # docker compose down
+  # docker-compose down
   # docker system prune
   # docker-compose pause
   # docker-compose unpause
